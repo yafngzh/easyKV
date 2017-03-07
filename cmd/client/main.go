@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/binary"
 	"encoding/gob"
 	"io"
 	"log"
@@ -24,9 +23,9 @@ func main() {
 	p := &msg.Msg{}
 	p.CreatTime = uint64(time.Now().Unix())
 	p.PID = os.Getpid()
-	p.Key = ([]byte)("yafngzh")
-	p.Val = ([]byte)("yafngzh")
-	p.Length = binary.Size(p)
+	p.Key = ("yafngzh")
+	p.Val = ("yafngzh")
+	// p.Length = binary.Size(p)
 	p.Type = msg.MSG_TYPE_SET
 	err = encoder.Encode(p)
 	if err != nil {

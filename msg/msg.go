@@ -16,10 +16,10 @@ type Msg struct {
 	CreatTime uint64 //创建的纳秒数
 
 	Type uint32
-	Key  []byte
-	Val  []byte
+	Key  interface{}
+	Val  interface{}
 }
 
 type RespMsg struct {
-	Resp string
+	Resp interface{}
 }

@@ -20,17 +20,21 @@ func NewKVServer() *KVServer {
 }
 
 func (s *KVServer) HandleMsg(recvMsg interface{}, kvclnt kvclnt.KVClnt) (interface{}, error) {
+	respMsg := &msg.RespMsg{}
+	var val interface{}
 	if decodeMsg, ok := recvMsg.(*msg.Msg); ok {
 		if decodeMsg.Type == msg.MSG_TYPE_GET {
-			return s.Get(decodeMsg.Key), nil
+			val = s.Get(decodeMsg.Key)
 		} else if decodeMsg.Type == msg.MSG_TYPE_SET {
-			return s.Set(decodeMsg.Key, decodeMsg.Val), nil
+			val = s.Set(decodeMsg.Key, decodeMsg.Val)
 		} else {
-			return nil, fmt.Errorf("类型错误 ", decodeMsg.Type)
+			val = fmt.Errorf("类型错误 ", decodeMsg.Type)
 		}
 	} else {
-		return nil, fmt.Errorf("消息结构错误 ")
+		val = fmt.Errorf("消息结构错误 ")
 	}
+	respMsg.Resp = val
+	return respMsg, nil
 }
 func (s *KVServer) Get(k interface{}) interface{} {
 	s.Lock.Lock()

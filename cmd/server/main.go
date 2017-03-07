@@ -22,7 +22,7 @@ func handleConn(c net.Conn) {
 	var exitClose = true
 	defer func() {
 		if exitClose {
-			log.Printf("c exit,ip %v, port %+v", c.RemoteAddr)
+			log.Printf("c exit,RemoteAddr %+v", c.RemoteAddr)
 			c.Close()
 		}
 	}()

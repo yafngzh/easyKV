@@ -6,16 +6,17 @@ import (
 
 	"github.com/yafngzh/easyKV/kvclnt"
 	"github.com/yafngzh/easyKV/msg"
+	"github.com/yafngzh/easyKV/persistent"
 )
 
 type KVServer struct {
 	Lock  sync.RWMutex
-	KVMap map[interface{}]interface{}
+	KVMap persistent.Map
 }
 
-func NewKVServer() *KVServer {
+func NewKVServer(keySize, valSize, totalSize int, filename string) *KVServer {
 	s := &KVServer{}
-	s.KVMap = make(map[interface{}]interface{})
+	s.KVMap = persistent.NewMap(keySize, valSize, totalSize, filename, false)
 	return s
 }
 
@@ -56,4 +57,12 @@ func (s *KVServer) Set(k interface{}, v interface{}) bool {
 		return false
 	}
 	return true
+}
+
+func (s *KVServer) Close() {
+	s.Lock.Lock()
+	defer s.Lock.Unlock()
+
+	s.KVMap.Flush()
+	s.KVMap.Unmap()
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/gob"
+	"flag"
 	"io"
 	"log"
 	"net"
@@ -78,8 +79,17 @@ func handleConn(c net.Conn) {
 }
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	keySize := flag.Int("keysize", 8, "")
+	valSize := flag.Int("valsize", 8, "")
+	totalSize := flag.Int("totalsize", 8, "总共支持的数量")
+	filename := flag.String("filename", "/data/appdata/easyKV/persistentmap", "")
 
-	svr = kvserver.NewKVServer()
+	flag.Parse()
+
+	svr = kvserver.NewKVServer(keySize, valSize, totalSize, filename)
+	defer {
+
+	}
 	l, err := net.Listen("tcp", ":8888")
 	if err != nil {
 		log.Printf("Listen error %v", err)
